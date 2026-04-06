@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenJeeves - Personal AI Butler</title>
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --primary-hover: #a78bfa;
+            --secondary: #22c55e;
+            --bg: #0e1015;
+            --bg-elevated: #191c24;
+            --text: #d4d4d8;
+            --text-strong: #f4f4f5;
+            --border: #1e2028;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            padding: 4rem 0;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            color: var(--text-strong);
+            margin-bottom: 1rem;
+        }
+        
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+        
+        .tagline {
+            font-size: 1.25rem;
+            color: var(--text);
+            margin-bottom: 2rem;
+        }
+        
+        .badges {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .badge {
+            padding: 0.5rem 1rem;
+            background: var(--bg-elevated);
+            border-radius: 9999px;
+            font-size: 0.875rem;
+        }
+        
+        nav {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+        
+        nav a {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-elevated);
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        nav a:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .section {
+            margin-bottom: 4rem;
+        }
+        
+        .section h2 {
+            font-size: 2rem;
+            color: var(--text-strong);
+            margin-bottom: 1rem;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .feature {
+            background: var(--bg-elevated);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        .feature h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .agents {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .agent {
+            background: var(--bg-elevated);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        
+        .agent-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .agent h3 {
+            color: var(--text-strong);
+            margin-bottom: 0.5rem;
+        }
+        
+        code {
+            background: var(--bg-elevated);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+        }
+        
+        pre {
+            background: var(--bg-elevated);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🤵</div>
+            <h1>OpenJeeves</h1>
+            <p class="tagline">Your Personal AI Butler, Powered by Claude Code & OpenClaw</p>
+            <div class="badges">
+                <span class="badge">MIT License</span>
+                <span class="badge">Open Source</span>
+                <span class="badge">v2026.4.6</span>
+            </div>
+        </header>
+        
+        <nav>
+            <a href="#features">Features</a>
+            <a href="#agents">Agents</a>
+            <a href="#quickstart">Quick Start</a>
+            <a href="#docs">Docs</a>
+            <a href="https://github.com/noktirnal42/openjeeves">GitHub</a>
+        </nav>
+        
+        <section id="features" class="section">
+            <h2>Features</h2>
+            <div class="features">
+                <div class="feature">
+                    <h3>Claude Code Integration</h3>
+                    <p>Todo management, background agents, session memory, and skills registry from Claude Code.</p>
+                </div>
+                <div class="feature">
+                    <h3>Multi-Channel Inbox</h3>
+                    <p>WhatsApp, Telegram, Slack, Discord, Signal, iMessage, and more.</p>
+                </div>
+                <div class="feature">
+                    <h3>Model Agnostic</h3>
+                    <p>Works with Ollama, LM Studio, OpenRouter - not locked to Anthropic.</p>
+                </div>
+                <div class="feature">
+                    <h3>Custom Branding</h3>
+                    <p>Purple/green theme, custom avatars, Jeeves identity.</p>
+                </div>
+                <div class="feature">
+                    <h3>Skills System</h3>
+                    <p>Bundled, managed, and workspace skills for extensibility.</p>
+                </div>
+                <div class="feature">
+                    <h3>Voice & Talk</h3>
+                    <p>macOS/iOS voice wake, Android voice mode with ElevenLabs.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="agents" class="section">
+            <h2>Meet the Agents</h2>
+            <div class="agents">
+                <div class="agent">
+                    <div class="agent-avatar">J</div>
+                    <h3>Jeeves</h3>
+                    <p>General Assistant</p>
+                </div>
+                <div class="agent">
+                    <div class="agent-avatar">Jl</div>
+                    <h3>Jewel</h3>
+                    <p>Verification Agent</p>
+                </div>
+                <div class="agent">
+                    <div class="agent-avatar">A</div>
+                    <h3>Apex</h3>
+                    <p>Explorer Agent</p>
+                </div>
+                <div class="agent">
+                    <div class="agent-avatar">C</div>
+                    <h3>Cypher</h3>
+                    <p>Planner Agent</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="quickstart" class="section">
+            <h2>Quick Start</h2>
+            <pre><code># Clone the repository
+git clone https://github.com/noktirnal42/openjeeves.git
+cd openjeeves
+
+# Install dependencies
+pnpm install
+
+# Build UI and backend
+pnpm ui:build
+pnpm build
+
+# Run the gateway
+pnpm openclaw gateway run --bind loopback --port 18789</code></pre>
+        </section>
+        
+        <section id="docs" class="section">
+            <h2>Documentation</h2>
+            <div class="features">
+                <div class="feature">
+                    <h3><a href="getting-started.html">Getting Started</a></h3>
+                    <p>Quick start guide for new users.</p>
+                </div>
+                <div class="feature">
+                    <h3><a href="configuration.html">Configuration</a></h3>
+                    <p>Complete configuration reference.</p>
+                </div>
+                <div class="feature">
+                    <h3><a href="channels.html">Channels</a></h3>
+                    <p>Setup guides for messaging platforms.</p>
+                </div>
+                <div class="feature">
+                    <h3><a href="tools.html">Tools</a></h3>
+                    <p>Available tools and usage.</p>
+                </div>
+                <div class="feature">
+                    <h3><a href="skills.html">Skills</a></h3>
+                    <p>Skills system and custom skills.</p>
+                </div>
+                <div class="feature">
+                    <h3><a href="security.html">Security</a></h3>
+                    <p>Security best practices.</p>
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            <p>🤵 OpenJeeves — Built with ❤️ using Claude Code + OpenClaw</p>
+            <p><a href="https://github.com/noktirnal42/openjeeves">GitHub</a> · <a href="https://discord.gg/clawd">Discord</a></p>
+        </footer>
+    </div>
+</body>
+</html>
