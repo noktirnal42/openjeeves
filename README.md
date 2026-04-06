@@ -28,24 +28,26 @@
 
 Our AI assistant comes with four specialized agents, each with a unique personality and role:
 
-| Agent | Avatar | Role |
-|-------|--------|------|
-| **Jeeves** | ![Jeeves](assets/avatars/jeeves.png) | General Assistant |
-| **Jewel** | ![Jewel](assets/avatars/jewel.png) | Verification Agent |
-| **Apex** | ![Apex](assets/avatars/apex.png) | Explorer Agent |
-| **Cypher** | ![Cypher](assets/avatars/cypher.png) | Planner Agent |
+| Agent      | Avatar                                           | Role               |
+| ---------- | ------------------------------------------------ | ------------------ |
+| **Jeeves** | ![Jeeves](/openjeeves/assets/avatars/jeeves.png) | General Assistant  |
+| **Jewel**  | ![Jewel](/openjeeves/assets/avatars/jewel.png)   | Verification Agent |
+| **Apex**   | ![Apex](/openjeeves/assets/avatars/apex.png)     | Explorer Agent     |
+| **Cypher** | ![Cypher](/openjeeves/assets/avatars/cypher.png) | Planner Agent      |
 
 Each agent can be selected via the agent selector in the chat interface to tailor the AI's behavior to your task.
 
 ## ✨ Features
 
 ### Core OpenClaw Features
+
 - **Multi-channel inbox**: WhatsApp, Telegram, Slack, Discord, Signal, iMessage, and more
 - **Gateway control plane**: Single WS control for sessions, channels, tools, and events
 - **Skills platform**: Bundled, managed, and workspace skills
 - **Voice wake & talk**: macOS/iOS voice activation, Android voice mode
 
 ### Claude Code Enhancements
+
 - **Todo management**: Structured task tracking with `todo_write`, `todo_read` tools
 - **Background agents**: Spawn sub-agents with `task_create`, `task_stop`, etc.
 - **Session memory**: Automatic conversation context logging
@@ -53,6 +55,7 @@ Each agent can be selected via the agent selector in the chat interface to tailo
 - **Tool registry**: Unified tool system combining Claude Code tools with OpenClaw tools
 
 ### OpenJeeves Customizations
+
 - **Custom branding**: Purple (#8b5cf6) and green (#22c55e) theme
 - **Agent avatars**: Four custom avatars (Jeeves, Jewel, Apex, Cypher)
 - **FiraCode Nerd Font**: Preferred monospace font
@@ -61,6 +64,7 @@ Each agent can be selected via the agent selector in the chat interface to tailo
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - **Node.js**: 22+ (24 recommended)
 - **Package Manager**: pnpm, npm, or bun
 
@@ -113,7 +117,9 @@ OpenJeeves uses the same configuration structure as OpenClaw. Create `~/.opencla
 ```
 
 ### Supported Models
+
 OpenJeeves works with multiple model providers:
+
 - **OpenAI**: GPT-4.5, o3, o4-mini
 - **Anthropic**: Claude (via built-in provider)
 - **Ollama**: Local models
@@ -126,6 +132,7 @@ OpenJeeves works with multiple model providers:
 Full documentation is available at [docs.openjeeves.ai](https://docs.openjeeves.ai) (coming soon).
 
 ### Key Docs
+
 - [Getting Started](docs/getting-started.md)
 - [Configuration](docs/configuration.md)
 - [Channels](docs/channels.md)
@@ -161,15 +168,18 @@ pnpm test src/agents/claude-code-integration/test.ts
 ## 🎨 Branding
 
 ### Colors
+
 - **Primary**: Purple (#8b5cf6)
 - **Secondary**: Green (#22c55e)
 - **Background**: Dark (#0e1015)
 
 ### Fonts
+
 - **Code**: FiraCode Nerd Font Mono
 - **UI**: Inter
 
 ### Logo
+
 The OpenJeeves logo is a hexagon with a purple-to-green gradient and "$" prompt, representing the fusion of Claude Code (the "leaked" version) with OpenClaw.
 
 ## 📝 License
