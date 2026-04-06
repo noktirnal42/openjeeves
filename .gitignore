@@ -1,6 +1,10 @@
 node_modules
 **/node_modules/
 .env
+.openjeeves-backup-20260406_061246/
+.serena/
+serena/
+claude-code-src/
 docker-compose.override.yml
 docker-compose.extra.yml
 dist
