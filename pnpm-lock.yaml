@@ -304,6 +304,8 @@ importers:
 
   extensions/cloudflare-ai-gateway: {}
 
+  extensions/coding-tools: {}
+
   extensions/comfy: {}
 
   extensions/copilot-proxy: {}

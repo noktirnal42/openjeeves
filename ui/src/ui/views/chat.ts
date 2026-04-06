@@ -246,7 +246,7 @@ function renderFallbackIndicator(status: FallbackIndicatorStatus | null | undefi
     phase === "cleared"
       ? "compaction-indicator compaction-indicator--fallback-cleared"
       : "compaction-indicator compaction-indicator--fallback";
-  const icon = phase === "cleared" ? icons.check : icons.brain;
+  const icon = phase === "cleared" ? icons.check : icons.neuralBrain;
   return html`
     <div class=${className} role="status" aria-live="polite" title=${details}>
       ${icon} ${message}
@@ -648,7 +648,7 @@ function renderWelcomeState(props: ChatProps): TemplateResult {
             style="width:56px; height:56px; border-radius:50%; object-fit:cover;"
           />`
         : html`<div class="agent-chat__avatar agent-chat__avatar--logo">
-            <img src=${logoUrl} alt="OpenClaw" />
+            <img src=${logoUrl} alt="OpenJeeves" />
           </div>`}
       <h2>${name}</h2>
       <div class="agent-chat__badges">
@@ -1176,9 +1176,35 @@ export function renderChat(props: ChatProps) {
             </button>
           `
         : nothing}
-      ${renderSearchBar(requestUpdate)} ${renderPinnedSection(props, pinned, requestUpdate)}
+       ${renderSearchBar(requestUpdate)} ${renderPinnedSection(props, pinned, requestUpdate)}
+       ${props.agentsList && props.currentAgentId ? html`
+         <div class="agent-info-bar">
+           ${() => {
+             const agent = props.agentsList.agents.find(a => a.id === props.currentAgentId);
+             if (!agent) return nothing;
+             const avatarUrl = agent.identity?.avatarUrl 
+               ? agent.identity.avatarUrl 
+               : (agent.identity?.name === 'Jeeves' ? '/assets/avatars/jeeves.png'
+                 : agent.identity?.name === 'Jewel' ? '/assets/avatars/jewel.png'
+                 : agent.identity?.name === 'Apex' ? '/assets/avatars/apex.png'
+                 : agent.identity?.name === 'Cypher' ? '/assets/avatars/cypher.png'
+                 : '/favicon.svg');
+             return html`
+               <div class="agent-info-bar-content">
+                 <img src=${avatarUrl} alt=${agent.name || 'Agent'} class="agent-info-bar-avatar" />
+                 <div class="agent-info-bar-details">
+                   <div class="agent-info-bar-name">${agent.name || 'Agent'}</div>
+                   ${agent.identity?.name && agent.identity?.name !== agent.name 
+                     ? html`<div class="agent-info-bar-subtitle">(${agent.identity.name})</div>`
+                     : nothing}
+                 </div>
+               </div>
+             `;
+           }}
+         </div>
+       ` : nothing}
 
-      <div class="chat-split-container ${sidebarOpen ? "chat-split-container--open" : ""}">
+       <div class="chat-split-container ${sidebarOpen ? "chat-split-container--open" : ""}">
         <div
           class="chat-main"
           style="flex: ${sidebarOpen ? `0 0 ${splitRatio * 100}%` : "1 1 100%"}"

@@ -462,6 +462,121 @@ export const icons = {
       <line x1="3" x2="10" y1="21" y2="14" />
     </svg>
   `,
+
+  // ─── OpenJeeves Custom Icons ──────────────────────────────────────────────
+
+  // Thinking: AI neural chip brain
+  neuralBrain: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Brain outline -->
+      <path d="M12 2C8 2 4 5 4 9c0 2.5 1.5 4.5 3 5.5V17c0 1 1 2 2 2h6c1 0 2-1 2-2v-2.5c1.5-1 3-3 3-5.5 0-4-4-7-8-7z" />
+      <!-- Neural pathways -->
+      <path d="M8 9h2l1-2 1 2h2" />
+      <path d="M9 13h6" />
+      <path d="M10 11l1 2 1-2" />
+      <!-- Chip connections -->
+      <line x1="7" y1="7" x2="5" y2="5" />
+      <line x1="17" y1="7" x2="19" y2="5" />
+      <line x1="7" y1="11" x2="5" y2="11" />
+      <line x1="17" y1="11" x2="19" y2="11" />
+      <!-- Neural nodes -->
+      <circle cx="5" cy="5" r="0.5" fill="currentColor" />
+      <circle cx="19" cy="5" r="0.5" fill="currentColor" />
+      <circle cx="5" cy="11" r="0.5" fill="currentColor" />
+      <circle cx="19" cy="11" r="0.5" fill="currentColor" />
+    </svg>
+  `,
+
+  // Tools: Hammer
+  hammer: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Hammer head -->
+      <path d="M15 12l-8.5 8.5a2.12 2.12 0 0 1-3-3L12 9" />
+      <path d="M17.5 4.5l2 2-7 7-2-2 7-7z" />
+      <!-- Handle -->
+      <path d="M14 7l3-3" />
+      <path d="M6.5 17.5l-2 2" />
+    </svg>
+  `,
+
+  // Focus: Detailed eyeball
+  eyeball: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Eye outline -->
+      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
+      <!-- Iris -->
+      <circle cx="12" cy="12" r="4" />
+      <!-- Pupil -->
+      <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+      <!-- Focus ring -->
+      <circle cx="12" cy="12" r="6" stroke-dasharray="2 2" opacity="0.5" />
+      <!-- Eyelashes -->
+      <path d="M4 8l2 2" />
+      <path d="M20 8l-2 2" />
+      <path d="M8 5l1 2" />
+      <path d="M16 5l-1 2" />
+    </svg>
+  `,
+
+  // Cron/Sessions: Clock with schedule indicators
+  clock: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Clock face -->
+      <circle cx="12" cy="12" r="10" />
+      <!-- Hour markers -->
+      <line x1="12" y1="2" x2="12" y2="4" />
+      <line x1="12" y1="20" x2="12" y2="22" />
+      <line x1="2" y1="12" x2="4" y2="12" />
+      <line x1="20" y1="12" x2="22" y2="12" />
+      <!-- Hands -->
+      <path d="M12 6v6l4 2" />
+      <!-- Schedule dots -->
+      <circle cx="16" cy="8" r="1" fill="currentColor" />
+      <circle cx="8" cy="16" r="1" fill="currentColor" />
+    </svg>
+  `,
+
+  // Theme: System (monitor with gear)
+  systemTheme: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Monitor -->
+      <rect x="2" y="3" width="20" height="14" rx="2" />
+      <line x1="8" y1="21" x2="16" y2="21" />
+      <line x1="12" y1="17" x2="12" y2="21" />
+      <!-- Gear overlay -->
+      <circle cx="17" cy="7" r="3" />
+      <path d="M17 4v1M17 10v1M14 7h1M20 7h1M14.93 4.93l.7.7M19.07 9.07l.7.7M14.93 9.07l.7-.7M19.07 4.93l.7-.7" />
+    </svg>
+  `,
+
+  // Theme: Light (sun with rays)
+  lightTheme: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Sun core -->
+      <circle cx="12" cy="12" r="5" />
+      <!-- Rays -->
+      <line x1="12" y1="1" x2="12" y2="4" />
+      <line x1="12" y1="20" x2="12" y2="23" />
+      <line x1="4.22" y1="4.22" x2="6.34" y2="6.34" />
+      <line x1="17.66" y1="17.66" x2="19.78" y2="19.78" />
+      <line x1="1" y1="12" x2="4" y2="12" />
+      <line x1="20" y1="12" x2="23" y2="12" />
+      <line x1="4.22" y1="19.78" x2="6.34" y2="17.66" />
+      <line x1="17.66" y1="6.34" x2="19.78" y2="4.22" />
+    </svg>
+  `,
+
+  // Theme: Dark (moon with stars)
+  darkTheme: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Moon -->
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+      <!-- Stars -->
+      <circle cx="18" cy="5" r="0.5" fill="currentColor" />
+      <circle cx="20" cy="9" r="0.5" fill="currentColor" />
+      <circle cx="16" cy="10" r="0.5" fill="currentColor" />
+    </svg>
+  `,
 } as const;
 
 export type IconName = keyof typeof icons;

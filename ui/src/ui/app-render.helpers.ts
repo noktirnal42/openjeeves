@@ -462,7 +462,7 @@ export function renderChatMobileToggle(state: AppViewState) {
               aria-pressed=${showThinking}
               title=${t("chat.thinkingToggle")}
             >
-              ${icons.brain}
+        ${icons.neuralBrain}
             </button>
             <button
               class="btn btn--sm btn--icon ${showToolCalls ? "active" : ""}"
@@ -1109,12 +1109,12 @@ function currentThemeIcon(theme: ThemeName): string {
 export function renderTopbarThemeModeToggle(state: AppViewState) {
   const modeIcon = (mode: ThemeMode) => {
     if (mode === "system") {
-      return icons.monitor;
+      return icons.systemTheme;
     }
     if (mode === "light") {
-      return icons.sun;
+      return icons.lightTheme;
     }
-    return icons.moon;
+    return icons.darkTheme;
   };
 
   const applyMode = (mode: ThemeMode, e: Event) => {
