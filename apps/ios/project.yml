@@ -51,6 +51,10 @@ targets:
         embed: true
       - target: OpenClawWatchApp
       - package: OpenClawKit
+        product: JeevesAgentCore
+      - package: OpenClawKit
+        product: JeevesFoundationModelsRuntime
+      - package: OpenClawKit
       - package: OpenClawKit
         product: OpenClawChatUI
       - package: OpenClawKit

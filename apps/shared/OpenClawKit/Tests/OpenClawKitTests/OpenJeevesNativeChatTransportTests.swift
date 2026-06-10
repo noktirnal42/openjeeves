@@ -91,16 +91,36 @@ struct OpenJeevesNativeChatTransportTests {
         let sessions = try await transport.listSessions(limit: nil)
 
         #expect(sessions.defaults?.model == "openjeeves/mlx")
-        #expect(sessions.sessions.first?.model == "mlx")
+        #expect(sessions.sessions.first?.model == "openjeeves/mlx")
+    }
+
+    @Test
+    func routerModelsExposeAvailabilityAndSessionPreference() async throws {
+        let router = JeevesRuntimeRouter(candidates: [
+            .unavailable(id: .foundationModels, displayName: "Foundation Models", reason: .modelNotReady),
+            JeevesRuntimeCandidate(runtime: TestRuntime(id: .inMemory)),
+        ])
+        let transport = OpenJeevesNativeChatTransport(runtime: router)
+
+        let models = try await transport.listModels()
+
+        #expect(models.map(\.modelID) == ["openjeeves/foundationModels", "openjeeves/inMemory"])
+        #expect(models.first?.name == "Foundation Models (modelNotReady)")
+
+        try await transport.setSessionModel(sessionKey: "main", model: "openjeeves/inMemory")
+        let sessions = try await transport.listSessions(limit: nil)
+
+        #expect(sessions.sessions.first?.model == "openjeeves/inMemory")
     }
 }
 
 private struct TestRuntime: JeevesAgentRuntime {
     let id: JeevesRuntimeID
+    var response = "ok"
 
     func respond(to turn: JeevesAgentTurn) async throws -> JeevesAgentTurnResult {
         JeevesAgentTurnResult(
-            message: JeevesAgentMessage(role: .assistant, content: turn.input.content),
+            message: JeevesAgentMessage(role: .assistant, content: "\(self.response): \(turn.input.content)"),
             runtime: self.id)
     }
 }

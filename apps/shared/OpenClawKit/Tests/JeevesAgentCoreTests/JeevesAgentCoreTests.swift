@@ -77,6 +77,69 @@ struct JeevesAgentCoreTests {
 
         Issue.record("Expected unknown tool error.")
     }
+
+    @Test
+    func runtimeRouterFallsBackToFirstAvailableRuntime() async throws {
+        let router = JeevesRuntimeRouter(candidates: [
+            .unavailable(id: .foundationModels, displayName: "Foundation Models", reason: .modelNotReady),
+            JeevesRuntimeCandidate(runtime: TestRuntime(id: .inMemory, response: "fallback")),
+        ])
+        let turn = JeevesAgentTurn(
+            sessionID: "session-1",
+            input: JeevesAgentMessage(role: .user, content: "Hello"),
+            runtimeHints: JeevesRuntimeHints(preferredRuntime: .foundationModels))
+
+        let result = try await router.respond(to: turn)
+
+        #expect(result.runtime == .inMemory)
+        #expect(result.message.content == "fallback: Hello")
+        #expect(result.events.first?.metadata["router"] == "openjeeves-native")
+    }
+
+    @Test
+    func runtimeRouterHonorsAvailablePreferredRuntime() async throws {
+        let router = JeevesRuntimeRouter(candidates: [
+            JeevesRuntimeCandidate(runtime: TestRuntime(id: .foundationModels, response: "foundation")),
+            JeevesRuntimeCandidate(runtime: TestRuntime(id: .mlx, response: "mlx")),
+        ])
+        let turn = JeevesAgentTurn(
+            sessionID: "session-1",
+            input: JeevesAgentMessage(role: .user, content: "Route"),
+            runtimeHints: JeevesRuntimeHints(preferredRuntime: .mlx))
+
+        let result = try await router.respond(to: turn)
+
+        #expect(result.runtime == .mlx)
+        #expect(result.message.content == "mlx: Route")
+    }
+
+    @Test
+    func runtimeRouterReportsUnavailableChoices() async throws {
+        let router = JeevesRuntimeRouter(candidates: [
+            .unavailable(id: .coreAI, displayName: "Core AI", reason: .runtimeDisabled),
+            .unavailable(id: .mlx, displayName: "MLX", reason: .modelNotInstalled),
+        ])
+
+        let choices = await router.choices()
+
+        #expect(choices.map(\.id) == [.coreAI, .mlx])
+        #expect(choices.map(\.availability.statusLabel) == ["runtimeDisabled", "modelNotInstalled"])
+
+        do {
+            _ = try await router.respond(to: JeevesAgentTurn(
+                sessionID: "session-1",
+                input: JeevesAgentMessage(role: .user, content: "No runtime")))
+        } catch let error as JeevesRuntimeRouterError {
+            if case .noAvailableRuntime(let reported) = error {
+                #expect(reported == choices)
+                return
+            }
+            Issue.record("Expected noAvailableRuntime.")
+            return
+        }
+
+        Issue.record("Expected router to throw when every runtime is unavailable.")
+    }
 }
 
 private struct TestTool: JeevesAgentTool {
@@ -90,5 +153,16 @@ private struct TestTool: JeevesAgentTool {
 
     func run(_ invocation: JeevesToolInvocation) async throws -> JeevesToolResult {
         JeevesToolResult(toolName: invocation.toolName, content: "ok")
+    }
+}
+
+private struct TestRuntime: JeevesAgentRuntime {
+    let id: JeevesRuntimeID
+    let response: String
+
+    func respond(to turn: JeevesAgentTurn) async throws -> JeevesAgentTurnResult {
+        JeevesAgentTurnResult(
+            message: JeevesAgentMessage(role: .assistant, content: "\(self.response): \(turn.input.content)"),
+            runtime: self.id)
     }
 }

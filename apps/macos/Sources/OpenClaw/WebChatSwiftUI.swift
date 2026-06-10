@@ -37,20 +37,17 @@ enum OpenJeevesNativeChatFeature {
     }
 
     private static func makeNativeRuntime() -> any JeevesAgentRuntime {
-#if canImport(FoundationModels)
-        if #available(macOS 26.0, *) {
-            let availability = JeevesFoundationModelsSupport.currentAvailability()
-            if availability.isAvailable {
-                webChatSwiftLogger.info("OpenJeeves native chat using Foundation Models runtime.")
-                return JeevesFoundationModelsRuntime(instructions: self.foundationModelsInstructions)
-            }
-            webChatSwiftLogger.info(
-                "OpenJeeves native chat falling back from Foundation Models: \(availability.statusLabel, privacy: .public)")
-        }
-#else
-        webChatSwiftLogger.info("OpenJeeves native chat falling back because FoundationModels is not importable.")
-#endif
-        return JeevesInMemoryAgentRuntime()
+        webChatSwiftLogger.info("OpenJeeves native chat using runtime router.")
+        return JeevesRuntimeRouter(candidates: self.nativeRuntimeCandidates(), defaultRuntimeID: .foundationModels)
+    }
+
+    private static func nativeRuntimeCandidates() -> [JeevesRuntimeCandidate] {
+        [
+            JeevesFoundationModelsRuntimeCandidate.make(instructions: self.foundationModelsInstructions),
+            .unavailable(id: .coreAI, displayName: "Core AI", reason: .runtimeDisabled),
+            .unavailable(id: .mlx, displayName: "MLX", reason: .modelNotInstalled),
+            JeevesRuntimeCandidate(runtime: JeevesInMemoryAgentRuntime(), displayName: "Native In-Memory"),
+        ]
     }
 
     private static func boolValue(from raw: String) -> Bool? {

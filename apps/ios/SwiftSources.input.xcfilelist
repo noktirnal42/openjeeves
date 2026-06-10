@@ -9,6 +9,7 @@ Sources/Device/DeviceStatusService.swift
 Sources/Device/NetworkStatusService.swift
 Sources/Chat/ChatSheet.swift
 Sources/Chat/IOSGatewayChatTransport.swift
+Sources/Chat/OpenJeevesNativeChatFeature.swift
 Sources/OpenClawApp.swift
 Sources/Location/LocationService.swift
 Sources/Model/NodeAppModel.swift
@@ -29,6 +30,13 @@ Sources/Status/VoiceWakeToast.swift
 Sources/Voice/VoiceTab.swift
 Sources/Voice/VoiceWakeManager.swift
 Sources/Voice/VoiceWakePreferences.swift
+../shared/OpenClawKit/Sources/JeevesAgentCore/JeevesAgentCore.swift
+../shared/OpenClawKit/Sources/JeevesAgentCore/JeevesAgentTools.swift
+../shared/OpenClawKit/Sources/JeevesAgentCore/JeevesInMemoryAgentRuntime.swift
+../shared/OpenClawKit/Sources/JeevesAgentCore/JeevesRuntimeRouter.swift
+../shared/OpenClawKit/Sources/JeevesFoundationModelsRuntime/JeevesFoundationModelsPromptBuilder.swift
+../shared/OpenClawKit/Sources/JeevesFoundationModelsRuntime/JeevesFoundationModelsRuntime.swift
+../shared/OpenClawKit/Sources/JeevesFoundationModelsRuntime/JeevesFoundationModelsRuntimeCandidate.swift
 ../shared/OpenClawKit/Sources/OpenClawChatUI/ChatComposer.swift
 ../shared/OpenClawKit/Sources/OpenClawChatUI/ChatMarkdownRenderer.swift
 ../shared/OpenClawKit/Sources/OpenClawChatUI/ChatMarkdownPreprocessor.swift
@@ -41,6 +49,7 @@ Sources/Voice/VoiceWakePreferences.swift
 ../shared/OpenClawKit/Sources/OpenClawChatUI/ChatTransport.swift
 ../shared/OpenClawKit/Sources/OpenClawChatUI/ChatView.swift
 ../shared/OpenClawKit/Sources/OpenClawChatUI/ChatViewModel.swift
+../shared/OpenClawKit/Sources/OpenClawChatUI/OpenJeevesNativeChatTransport.swift
 ../shared/OpenClawKit/Sources/OpenClawKit/AnyCodable.swift
 ../shared/OpenClawKit/Sources/OpenClawKit/BonjourEscapes.swift
 ../shared/OpenClawKit/Sources/OpenClawKit/BonjourTypes.swift

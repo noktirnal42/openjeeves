@@ -33,9 +33,19 @@ public final class OpenJeevesNativeChatTransport: @unchecked Sendable, OpenClawC
     }
 
     public func listModels() async throws -> [OpenClawChatModelChoice] {
-        [
+        if let router = self.runtime as? JeevesRuntimeRouter {
+            return await router.choices().map { choice in
+                OpenClawChatModelChoice(
+                    modelID: Self.modelID(for: choice.id),
+                    name: Self.modelName(for: choice),
+                    provider: "openjeeves",
+                    contextWindow: nil)
+            }
+        }
+
+        return [
             OpenClawChatModelChoice(
-                modelID: self.runtime.id.rawValue,
+                modelID: Self.modelID(for: self.runtime.id),
                 name: Self.modelName(for: self.runtime.id),
                 provider: "openjeeves",
                 contextWindow: nil),
@@ -51,6 +61,7 @@ public final class OpenJeevesNativeChatTransport: @unchecked Sendable, OpenClawC
     {
         let key = Self.normalizedSessionKey(sessionKey)
         let session = await self.state.session(for: key)
+        let preferredRuntime = await self.state.preferredRuntime(for: key) ?? self.runtime.id
         let trimmed = message.trimmingCharacters(in: .whitespacesAndNewlines)
         let inputText = trimmed.isEmpty && !attachments.isEmpty ? "See attached." : trimmed
         let input = JeevesAgentMessage(
@@ -65,7 +76,7 @@ public final class OpenJeevesNativeChatTransport: @unchecked Sendable, OpenClawC
             _ = try await session.run(
                 input: input,
                 runtime: self.runtime,
-                hints: JeevesRuntimeHints(preferredRuntime: self.runtime.id))
+                hints: JeevesRuntimeHints(preferredRuntime: preferredRuntime))
             await self.state.markUpdated(sessionKey: key)
             self.continuation.yield(.chat(OpenClawChatEventPayload(
                 runId: idempotencyKey,
@@ -95,19 +106,23 @@ public final class OpenJeevesNativeChatTransport: @unchecked Sendable, OpenClawC
     }
 
     public func listSessions(limit: Int?) async throws -> OpenClawChatSessionsListResponse {
-        let sessions = await self.state.sessionEntries(limit: limit, runtimeID: self.runtime.id)
+        let sessions = await self.state.sessionEntries(limit: limit, defaultRuntimeID: self.runtime.id)
         return OpenClawChatSessionsListResponse(
             ts: Date().timeIntervalSince1970 * 1000,
             path: nil,
             count: sessions.count,
             defaults: OpenClawChatSessionsDefaults(
-                model: "openjeeves/\(self.runtime.id.rawValue)",
+                model: Self.modelID(for: self.runtime.id),
                 contextTokens: nil,
                 mainSessionKey: "main"),
             sessions: sessions)
     }
 
-    public func setSessionModel(sessionKey _: String, model _: String?) async throws {}
+    public func setSessionModel(sessionKey: String, model: String?) async throws {
+        await self.state.setPreferredRuntime(
+            Self.runtimeID(from: model),
+            sessionKey: Self.normalizedSessionKey(sessionKey))
+    }
 
     public func setSessionThinking(sessionKey _: String, thinkingLevel _: String) async throws {}
 
@@ -130,6 +145,19 @@ public final class OpenJeevesNativeChatTransport: @unchecked Sendable, OpenClawC
         return trimmed.isEmpty ? "main" : trimmed
     }
 
+    fileprivate static func modelID(for id: JeevesRuntimeID) -> String {
+        "openjeeves/\(id.rawValue)"
+    }
+
+    private static func runtimeID(from model: String?) -> JeevesRuntimeID? {
+        guard let model else { return nil }
+        let trimmed = model.trimmingCharacters(in: .whitespacesAndNewlines)
+        let raw = trimmed.hasPrefix("openjeeves/")
+            ? String(trimmed.dropFirst("openjeeves/".count))
+            : trimmed
+        return JeevesRuntimeID(rawValue: raw)
+    }
+
     private static func modelName(for id: JeevesRuntimeID) -> String {
         switch id {
         case .foundationModels:
@@ -145,6 +173,12 @@ public final class OpenJeevesNativeChatTransport: @unchecked Sendable, OpenClawC
         case .inMemory:
             "Native In-Memory"
         }
+    }
+
+    private static func modelName(for choice: JeevesRuntimeRouteChoice) -> String {
+        let base = self.modelName(for: choice.id)
+        guard choice.availability != .available else { return base }
+        return "\(base) (\(choice.availability.statusLabel))"
     }
 
     private static func chatPayload(from message: JeevesAgentMessage) -> AnyCodable {
@@ -164,6 +198,7 @@ private actor OpenJeevesNativeChatTransportState {
     private var activeSessionKey = "main"
     private var sessions: [String: JeevesAgentSession] = [:]
     private var updatedAtBySession: [String: Double] = [:]
+    private var preferredRuntimeBySession: [String: JeevesRuntimeID] = [:]
 
     func setActiveSessionKey(_ sessionKey: String) {
         self.activeSessionKey = sessionKey
@@ -190,10 +225,21 @@ private actor OpenJeevesNativeChatTransportState {
         self.updatedAtBySession[sessionKey] = Date().timeIntervalSince1970 * 1000
     }
 
-    func sessionEntries(limit: Int?, runtimeID: JeevesRuntimeID) -> [OpenClawChatSessionEntry] {
+    func setPreferredRuntime(_ runtimeID: JeevesRuntimeID?, sessionKey: String) {
+        _ = self.session(for: sessionKey)
+        self.preferredRuntimeBySession[sessionKey] = runtimeID
+        self.updatedAtBySession[sessionKey] = Date().timeIntervalSince1970 * 1000
+    }
+
+    func preferredRuntime(for sessionKey: String) -> JeevesRuntimeID? {
+        self.preferredRuntimeBySession[sessionKey]
+    }
+
+    func sessionEntries(limit: Int?, defaultRuntimeID: JeevesRuntimeID) -> [OpenClawChatSessionEntry] {
         _ = self.session(for: self.activeSessionKey)
         let entries = self.sessions.keys.map { key in
-            OpenClawChatSessionEntry(
+            let runtimeID = self.preferredRuntimeBySession[key] ?? defaultRuntimeID
+            return OpenClawChatSessionEntry(
                 key: key,
                 kind: "native",
                 displayName: key == "main" ? "Native Main" : key,
@@ -211,7 +257,7 @@ private actor OpenJeevesNativeChatTransportState {
                 outputTokens: nil,
                 totalTokens: nil,
                 modelProvider: "openjeeves",
-                model: runtimeID.rawValue,
+                model: OpenJeevesNativeChatTransport.modelID(for: runtimeID),
                 contextTokens: nil)
         }
         let sorted = entries.sorted { ($0.updatedAt ?? 0) > ($1.updatedAt ?? 0) }
