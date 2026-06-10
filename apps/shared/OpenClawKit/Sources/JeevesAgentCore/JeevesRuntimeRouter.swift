@@ -8,6 +8,10 @@ public enum JeevesRuntimeUnavailableReason: String, Codable, Sendable, Equatable
     case runtimeDisabled
     case modelNotInstalled
     case unknown
+    case adapterUnavailable
+    case configurationMissing
+    case frameworkUnavailable
+    case modelAssetMissing
 }
 
 public enum JeevesRuntimeAvailability: Codable, Sendable, Equatable {

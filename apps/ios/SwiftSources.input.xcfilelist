@@ -37,6 +37,8 @@ Sources/Voice/VoiceWakePreferences.swift
 ../shared/OpenClawKit/Sources/JeevesFoundationModelsRuntime/JeevesFoundationModelsPromptBuilder.swift
 ../shared/OpenClawKit/Sources/JeevesFoundationModelsRuntime/JeevesFoundationModelsRuntime.swift
 ../shared/OpenClawKit/Sources/JeevesFoundationModelsRuntime/JeevesFoundationModelsRuntimeCandidate.swift
+../shared/OpenClawKit/Sources/JeevesLocalModelRuntimes/JeevesCoreAIRuntimeCandidate.swift
+../shared/OpenClawKit/Sources/JeevesLocalModelRuntimes/JeevesMLXRuntimeCandidate.swift
 ../shared/OpenClawKit/Sources/OpenClawChatUI/ChatComposer.swift
 ../shared/OpenClawKit/Sources/OpenClawChatUI/ChatMarkdownRenderer.swift
 ../shared/OpenClawKit/Sources/OpenClawChatUI/ChatMarkdownPreprocessor.swift

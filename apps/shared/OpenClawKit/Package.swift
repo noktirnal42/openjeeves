@@ -11,6 +11,7 @@ let package = Package(
     products: [
         .library(name: "JeevesAgentCore", targets: ["JeevesAgentCore"]),
         .library(name: "JeevesFoundationModelsRuntime", targets: ["JeevesFoundationModelsRuntime"]),
+        .library(name: "JeevesLocalModelRuntimes", targets: ["JeevesLocalModelRuntimes"]),
         .library(name: "OpenClawProtocol", targets: ["OpenClawProtocol"]),
         .library(name: "OpenClawKit", targets: ["OpenClawKit"]),
         .library(name: "OpenClawChatUI", targets: ["OpenClawChatUI"]),
@@ -30,6 +31,13 @@ let package = Package(
             name: "JeevesFoundationModelsRuntime",
             dependencies: ["JeevesAgentCore"],
             path: "Sources/JeevesFoundationModelsRuntime",
+            swiftSettings: [
+                .enableUpcomingFeature("StrictConcurrency"),
+            ]),
+        .target(
+            name: "JeevesLocalModelRuntimes",
+            dependencies: ["JeevesAgentCore"],
+            path: "Sources/JeevesLocalModelRuntimes",
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
@@ -86,6 +94,14 @@ let package = Package(
             name: "JeevesFoundationModelsRuntimeTests",
             dependencies: ["JeevesAgentCore", "JeevesFoundationModelsRuntime"],
             path: "Tests/JeevesFoundationModelsRuntimeTests",
+            swiftSettings: [
+                .enableUpcomingFeature("StrictConcurrency"),
+                .enableExperimentalFeature("SwiftTesting"),
+            ]),
+        .testTarget(
+            name: "JeevesLocalModelRuntimesTests",
+            dependencies: ["JeevesAgentCore", "JeevesLocalModelRuntimes"],
+            path: "Tests/JeevesLocalModelRuntimesTests",
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
                 .enableExperimentalFeature("SwiftTesting"),

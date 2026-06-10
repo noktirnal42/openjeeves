@@ -46,6 +46,7 @@ let package = Package(
                 "OpenClawDiscovery",
                 .product(name: "JeevesAgentCore", package: "OpenClawKit"),
                 .product(name: "JeevesFoundationModelsRuntime", package: "OpenClawKit"),
+                .product(name: "JeevesLocalModelRuntimes", package: "OpenClawKit"),
                 .product(name: "OpenClawKit", package: "OpenClawKit"),
                 .product(name: "OpenClawChatUI", package: "OpenClawKit"),
                 .product(name: "OpenClawProtocol", package: "OpenClawKit"),

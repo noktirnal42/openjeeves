@@ -55,6 +55,8 @@ targets:
       - package: OpenClawKit
         product: JeevesFoundationModelsRuntime
       - package: OpenClawKit
+        product: JeevesLocalModelRuntimes
+      - package: OpenClawKit
       - package: OpenClawKit
         product: OpenClawChatUI
       - package: OpenClawKit

@@ -2,6 +2,7 @@ import AppKit
 import Foundation
 import JeevesAgentCore
 import JeevesFoundationModelsRuntime
+import JeevesLocalModelRuntimes
 import OpenClawChatUI
 import OpenClawKit
 import OpenClawProtocol
@@ -42,10 +43,11 @@ enum OpenJeevesNativeChatFeature {
     }
 
     private static func nativeRuntimeCandidates() -> [JeevesRuntimeCandidate] {
-        [
+        let environment = ProcessInfo.processInfo.environment
+        return [
             JeevesFoundationModelsRuntimeCandidate.make(instructions: self.foundationModelsInstructions),
-            .unavailable(id: .coreAI, displayName: "Core AI", reason: .runtimeDisabled),
-            .unavailable(id: .mlx, displayName: "MLX", reason: .modelNotInstalled),
+            JeevesCoreAIRuntimeCandidate.make(configuration: .from(environment: environment)),
+            JeevesMLXRuntimeCandidate.make(configuration: .from(environment: environment)),
             JeevesRuntimeCandidate(runtime: JeevesInMemoryAgentRuntime(), displayName: "Native In-Memory"),
         ]
     }

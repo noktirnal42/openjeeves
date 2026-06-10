@@ -1,6 +1,7 @@
 import Foundation
 import JeevesAgentCore
 import JeevesFoundationModelsRuntime
+import JeevesLocalModelRuntimes
 import OpenClawChatUI
 import OpenClawKit
 import OSLog
@@ -45,21 +46,21 @@ enum OpenJeevesNativeChatFeature {
         guard self.isEnabled(environment: environment, defaults: defaults) else {
             return IOSGatewayChatTransport(gateway: gateway)
         }
-        return OpenJeevesNativeChatTransport(runtime: self.makeNativeRuntime())
+        return OpenJeevesNativeChatTransport(runtime: self.makeNativeRuntime(environment: environment))
     }
 
-    private static func makeNativeRuntime() -> any JeevesAgentRuntime {
+    private static func makeNativeRuntime(environment: [String: String]) -> any JeevesAgentRuntime {
         self.logger.info("OpenJeeves iOS native chat using runtime router.")
         return JeevesRuntimeRouter(
-            candidates: self.nativeRuntimeCandidates(),
+            candidates: self.nativeRuntimeCandidates(environment: environment),
             defaultRuntimeID: .foundationModels)
     }
 
-    private static func nativeRuntimeCandidates() -> [JeevesRuntimeCandidate] {
-        [
+    private static func nativeRuntimeCandidates(environment: [String: String]) -> [JeevesRuntimeCandidate] {
+        return [
             JeevesFoundationModelsRuntimeCandidate.make(instructions: self.foundationModelsInstructions),
-            .unavailable(id: .coreAI, displayName: "Core AI", reason: .runtimeDisabled),
-            .unavailable(id: .mlx, displayName: "MLX", reason: .modelNotInstalled),
+            JeevesCoreAIRuntimeCandidate.make(configuration: .from(environment: environment)),
+            JeevesMLXRuntimeCandidate.make(configuration: .from(environment: environment)),
             JeevesRuntimeCandidate(runtime: JeevesInMemoryAgentRuntime(), displayName: "Native In-Memory"),
         ]
     }
