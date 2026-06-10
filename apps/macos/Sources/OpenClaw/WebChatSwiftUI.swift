@@ -1,5 +1,7 @@
 import AppKit
 import Foundation
+import JeevesAgentCore
+import JeevesFoundationModelsRuntime
 import OpenClawChatUI
 import OpenClawKit
 import OpenClawProtocol
@@ -9,6 +11,59 @@ import SwiftUI
 
 private let webChatSwiftLogger = Logger(subsystem: "ai.openclaw", category: "WebChatSwiftUI")
 private let webChatThinkingLevelDefaultsKey = "openclaw.webchat.thinkingLevel"
+
+enum OpenJeevesNativeChatFeature {
+    private static let defaultsKey = "openjeeves.nativeChat.enabled"
+    private static let environmentKey = "OPENJEEVES_NATIVE_CHAT"
+    private static let foundationModelsInstructions = """
+    You are Jeeves, a native Apple-platform agent for OpenJeeves. Be concise, practical, and clear about actions that require local permissions or unavailable capabilities.
+    """
+
+    static var isEnabled: Bool {
+        if let envValue = ProcessInfo.processInfo.environment[self.environmentKey] {
+            return self.boolValue(from: envValue) ?? false
+        }
+        guard UserDefaults.standard.object(forKey: self.defaultsKey) != nil else {
+            return false
+        }
+        return UserDefaults.standard.bool(forKey: self.defaultsKey)
+    }
+
+    static func makeTransport() -> any OpenClawChatTransport {
+        guard self.isEnabled else {
+            return MacGatewayChatTransport()
+        }
+        return OpenJeevesNativeChatTransport(runtime: self.makeNativeRuntime())
+    }
+
+    private static func makeNativeRuntime() -> any JeevesAgentRuntime {
+#if canImport(FoundationModels)
+        if #available(macOS 26.0, *) {
+            let availability = JeevesFoundationModelsSupport.currentAvailability()
+            if availability.isAvailable {
+                webChatSwiftLogger.info("OpenJeeves native chat using Foundation Models runtime.")
+                return JeevesFoundationModelsRuntime(instructions: self.foundationModelsInstructions)
+            }
+            webChatSwiftLogger.info(
+                "OpenJeeves native chat falling back from Foundation Models: \(availability.statusLabel, privacy: .public)")
+        }
+#else
+        webChatSwiftLogger.info("OpenJeeves native chat falling back because FoundationModels is not importable.")
+#endif
+        return JeevesInMemoryAgentRuntime()
+    }
+
+    private static func boolValue(from raw: String) -> Bool? {
+        switch raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() {
+        case "1", "true", "yes", "on":
+            true
+        case "0", "false", "no", "off":
+            false
+        default:
+            nil
+        }
+    }
+}
 
 private enum WebChatSwiftUILayout {
     static let windowSize = NSSize(width: 500, height: 840)
@@ -225,7 +280,7 @@ final class WebChatSwiftUIWindowController {
     var onVisibilityChanged: ((Bool) -> Void)?
 
     convenience init(sessionKey: String, presentation: WebChatPresentation) {
-        self.init(sessionKey: sessionKey, presentation: presentation, transport: MacGatewayChatTransport())
+        self.init(sessionKey: sessionKey, presentation: presentation, transport: OpenJeevesNativeChatFeature.makeTransport())
     }
 
     init(sessionKey: String, presentation: WebChatPresentation, transport: any OpenClawChatTransport) {
@@ -357,7 +412,7 @@ final class WebChatSwiftUIWindowController {
                 styleMask: [.titled, .closable, .resizable, .miniaturizable],
                 backing: .buffered,
                 defer: false)
-            window.title = "OpenClaw Chat"
+            window.title = OpenJeevesNativeChatFeature.isEnabled ? "OpenJeeves Native Chat" : "OpenClaw Chat"
             window.contentViewController = contentViewController
             window.isReleasedWhenClosed = false
             window.titleVisibility = .visible

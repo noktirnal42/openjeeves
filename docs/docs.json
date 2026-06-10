@@ -1,14 +1,14 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "name": "OpenClaw",
-  "description": "Self-hosted gateway that connects Discord, Google Chat, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo, and more to AI coding agents. Run one Gateway process on your own machine and message your AI assistant from anywhere.",
+  "name": "OpenJeeves",
+  "description": "Native Apple agent system for macOS and iOS, moving toward Foundation Models, Core AI, MLX, App Intents, and privacy-first local automation.",
   "theme": "mint",
   "icons": {
     "library": "lucide"
   },
   "logo": {
-    "light": "/assets/pixel-lobster.svg",
-    "dark": "/assets/pixel-lobster.svg"
+    "light": "/assets/openjeeves-logo-text.svg",
+    "dark": "/assets/openjeeves-logo-text-light.svg"
   },
   "fonts": {
     "body": {
@@ -18,11 +18,11 @@
       "family": "DM Sans"
     }
   },
-  "favicon": "/assets/pixel-lobster.svg",
+  "favicon": "/assets/openjeeves-logo-text.svg",
   "colors": {
-    "primary": "#FF5A36",
-    "dark": "#FF5A36",
-    "light": "#FF8A6B"
+    "primary": "#8B5CF6",
+    "dark": "#8B5CF6",
+    "light": "#22C55E"
   },
   "styling": {
     "codeblocks": {
@@ -36,18 +36,13 @@
     "links": [
       {
         "label": "GitHub",
-        "href": "https://github.com/openclaw/openclaw",
+        "href": "https://github.com/noktirnal42/openjeeves",
         "icon": "github"
       },
       {
         "label": "Releases",
-        "href": "https://github.com/openclaw/openclaw/releases",
+        "href": "https://github.com/noktirnal42/openjeeves/releases",
         "icon": "package"
-      },
-      {
-        "label": "Discord",
-        "href": "https://discord.com/invite/clawd",
-        "icon": "discord"
       }
     ]
   },
@@ -919,7 +914,12 @@
             "groups": [
               {
                 "group": "Overview",
-                "pages": ["index", "start/showcase", "concepts/features"]
+                "pages": [
+                  "index",
+                  "plans/apple-native-openjeeves-pivot",
+                  "start/showcase",
+                  "concepts/features"
+                ]
               },
               {
                 "group": "First steps",

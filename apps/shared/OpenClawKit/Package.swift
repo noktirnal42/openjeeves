@@ -9,6 +9,8 @@ let package = Package(
         .macOS(.v15),
     ],
     products: [
+        .library(name: "JeevesAgentCore", targets: ["JeevesAgentCore"]),
+        .library(name: "JeevesFoundationModelsRuntime", targets: ["JeevesFoundationModelsRuntime"]),
         .library(name: "OpenClawProtocol", targets: ["OpenClawProtocol"]),
         .library(name: "OpenClawKit", targets: ["OpenClawKit"]),
         .library(name: "OpenClawChatUI", targets: ["OpenClawChatUI"]),
@@ -18,6 +20,19 @@ let package = Package(
         .package(url: "https://github.com/gonzalezreal/textual", exact: "0.3.1"),
     ],
     targets: [
+        .target(
+            name: "JeevesAgentCore",
+            path: "Sources/JeevesAgentCore",
+            swiftSettings: [
+                .enableUpcomingFeature("StrictConcurrency"),
+            ]),
+        .target(
+            name: "JeevesFoundationModelsRuntime",
+            dependencies: ["JeevesAgentCore"],
+            path: "Sources/JeevesFoundationModelsRuntime",
+            swiftSettings: [
+                .enableUpcomingFeature("StrictConcurrency"),
+            ]),
         .target(
             name: "OpenClawProtocol",
             path: "Sources/OpenClawProtocol",
@@ -40,6 +55,7 @@ let package = Package(
         .target(
             name: "OpenClawChatUI",
             dependencies: [
+                "JeevesAgentCore",
                 "OpenClawKit",
                 .product(
                     name: "Textual",
@@ -54,6 +70,22 @@ let package = Package(
             name: "OpenClawKitTests",
             dependencies: ["OpenClawKit", "OpenClawChatUI"],
             path: "Tests/OpenClawKitTests",
+            swiftSettings: [
+                .enableUpcomingFeature("StrictConcurrency"),
+                .enableExperimentalFeature("SwiftTesting"),
+            ]),
+        .testTarget(
+            name: "JeevesAgentCoreTests",
+            dependencies: ["JeevesAgentCore"],
+            path: "Tests/JeevesAgentCoreTests",
+            swiftSettings: [
+                .enableUpcomingFeature("StrictConcurrency"),
+                .enableExperimentalFeature("SwiftTesting"),
+            ]),
+        .testTarget(
+            name: "JeevesFoundationModelsRuntimeTests",
+            dependencies: ["JeevesAgentCore", "JeevesFoundationModelsRuntime"],
+            path: "Tests/JeevesFoundationModelsRuntimeTests",
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
                 .enableExperimentalFeature("SwiftTesting"),

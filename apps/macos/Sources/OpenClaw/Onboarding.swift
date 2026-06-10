@@ -174,6 +174,6 @@ struct OnboardingView: View {
         self._onboardingChatModel = State(
             initialValue: OpenClawChatViewModel(
                 sessionKey: "onboarding",
-                transport: MacGatewayChatTransport()))
+                transport: OpenJeevesNativeChatFeature.makeTransport()))
     }
 }

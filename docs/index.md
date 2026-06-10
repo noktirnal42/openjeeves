@@ -1,196 +1,115 @@
 ---
-summary: "OpenClaw is a multi-channel gateway for AI agents that runs on any OS."
+summary: "OpenJeeves is a native Apple agent system for macOS and iOS."
 read_when:
-  - Introducing OpenClaw to newcomers
-title: "OpenClaw"
+  - Introducing OpenJeeves to newcomers
+title: "OpenJeeves"
 ---
 
-# OpenClaw 🦞
+# OpenJeeves
 
 <p align="center">
     <img
-        src="/assets/openclaw-logo-text-dark.png"
-        alt="OpenClaw"
+        src="/assets/openjeeves-logo-text.svg"
+        alt="OpenJeeves"
         width="500"
         class="dark:hidden"
     />
     <img
-        src="/assets/openclaw-logo-text.png"
-        alt="OpenClaw"
+        src="/assets/openjeeves-logo-text-light.svg"
+        alt="OpenJeeves"
         width="500"
         class="hidden dark:block"
     />
 </p>
 
-> _"EXFOLIATE! EXFOLIATE!"_ — A space lobster, probably
-
 <p align="center">
-  <strong>Any OS gateway for AI agents across Discord, Google Chat, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo, and more.</strong><br />
-  Send a message, get an agent response from your pocket. Run one Gateway across built-in channels, bundled channel plugins, WebChat, and mobile nodes.
+  <strong>A native Apple agent system for macOS and iOS.</strong><br />
+  OpenJeeves is moving toward Swift-native Foundation Models, Core AI, MLX, App Intents, and local-first Apple platform automation.
 </p>
 
 <Columns>
-  <Card title="Get Started" href="/start/getting-started" icon="rocket">
-    Install OpenClaw and bring up the Gateway in minutes.
+  <Card title="Getting Started" href="/getting-started" icon="rocket">
+    Run the current compatibility bridge or start native Apple development.
   </Card>
-  <Card title="Run Onboarding" href="/start/wizard" icon="sparkles">
-    Guided setup with `openclaw onboard` and pairing flows.
+  <Card title="Apple-Native Pivot" href="/plans/apple-native-openjeeves-pivot" icon="map">
+    Read the repo-grounded migration plan and upstream comparison.
   </Card>
-  <Card title="Open the Control UI" href="/web/control-ui" icon="layout-dashboard">
-    Launch the browser dashboard for chat, config, and sessions.
+  <Card title="Security" href="/security" icon="shield">
+    Review the inherited security posture while native approvals are built.
   </Card>
 </Columns>
 
-## What is OpenClaw?
+## What Is OpenJeeves?
 
-OpenClaw is a **self-hosted gateway** that connects your favorite chat apps and channel surfaces — built-in channels plus bundled or external channel plugins such as Discord, Google Chat, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo, and more — to AI coding agents like Pi. You run a single Gateway process on your own machine (or a server), and it becomes the bridge between your messaging apps and an always-available AI assistant.
+OpenJeeves is being rebuilt as a personal Apple agent that runs close to the user: on the Mac, iPhone, iPad, and eventually watch surfaces. The goal is a native assistant that can understand requests, call local tools, respect permissions, and use Apple-provided and Apple-Silicon-optimized models.
 
-**Who is it for?** Developers and power users who want a personal AI assistant they can message from anywhere — without giving up control of their data or relying on a hosted service.
+The repository still contains inherited gateway infrastructure. That compatibility bridge is useful while the native runtime is under construction, but it is not the final product architecture.
 
-**What makes it different?**
+## Target Runtime Stack
 
-- **Self-hosted**: runs on your hardware, your rules
-- **Multi-channel**: one Gateway serves built-in channels plus bundled or external channel plugins simultaneously
-- **Agent-native**: built for coding agents with tool use, sessions, memory, and multi-agent routing
-- **Open source**: MIT licensed, community-driven
+<Columns>
+  <Card title="Foundation Models" icon="sparkles">
+    First runtime target for Apple Intelligence language capability, structured output, and tool calling.
+  </Card>
+  <Card title="Core AI" icon="cpu">
+    Future runtime for compiled on-device model assets as toolchain and OS availability allow.
+  </Card>
+  <Card title="MLX" icon="hard-drive">
+    Mac-first Apple Silicon path for local specialist models and heavier local helpers.
+  </Card>
+  <Card title="App Intents" icon="workflow">
+    Native user-approved automation exposed to Shortcuts and system surfaces.
+  </Card>
+</Columns>
 
-**What do you need?** Node 24 (recommended), or Node 22 LTS (`22.14+`) for compatibility, an API key from your chosen provider, and 5 minutes. For best quality and security, use the strongest latest-generation model available.
+## Current Code To Reuse
 
-## How it works
+<Columns>
+  <Card title="macOS App" icon="monitor">
+    Menu bar app, permissions, talk mode, push-to-talk, canvas, gateway control, and local automation.
+  </Card>
+  <Card title="iOS App" icon="smartphone">
+    Pairing, camera, location, contacts, calendar, reminders, photos, voice, watch, and share surfaces.
+  </Card>
+  <Card title="Shared Swift" icon="package">
+    Chat UI, protocol models, device commands, and support utilities in shared Swift packages.
+  </Card>
+  <Card title="Compatibility Bridge" icon="cable">
+    Existing gateway and channel code while native OpenJeeves catches up.
+  </Card>
+</Columns>
 
-```mermaid
-flowchart LR
-  A["Chat apps + plugins"] --> B["Gateway"]
-  B --> C["Pi agent"]
-  B --> D["CLI"]
-  B --> E["Web Control UI"]
-  B --> F["macOS app"]
-  B --> G["iOS and Android nodes"]
+## Current Developer Path
+
+Run the compatibility bridge when you need inherited behavior:
+
+```bash
+pnpm install
+pnpm ui:build
+pnpm build
+pnpm openclaw gateway run --bind loopback --port 18789
 ```
 
-The Gateway is the single source of truth for sessions, routing, and channel connections.
+Work on native app surfaces here:
 
-## Key capabilities
+- `apps/macos`
+- `apps/ios`
+- `apps/shared/OpenClawKit`
+- `Swabble`
 
-<Columns>
-  <Card title="Multi-channel gateway" icon="network">
-    Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat, and more with a single Gateway process.
-  </Card>
-  <Card title="Plugin channels" icon="plug">
-    Bundled plugins add Matrix, Nostr, Twitch, Zalo, and more in normal current releases.
-  </Card>
-  <Card title="Multi-agent routing" icon="route">
-    Isolated sessions per agent, workspace, or sender.
-  </Card>
-  <Card title="Media support" icon="image">
-    Send and receive images, audio, and documents.
-  </Card>
-  <Card title="Web Control UI" icon="monitor">
-    Browser dashboard for chat, config, sessions, and nodes.
-  </Card>
-  <Card title="Mobile nodes" icon="smartphone">
-    Pair iOS and Android nodes for Canvas, camera, and voice-enabled workflows.
-  </Card>
-</Columns>
-
-## Quick start
-
-<Steps>
-  <Step title="Install OpenClaw">
-    ```bash
-    npm install -g openclaw@latest
-    ```
-  </Step>
-  <Step title="Onboard and install the service">
-    ```bash
-    openclaw onboard --install-daemon
-    ```
-  </Step>
-  <Step title="Chat">
-    Open the Control UI in your browser and send a message:
-
-    ```bash
-    openclaw dashboard
-    ```
-
-    Or connect a channel ([Telegram](/channels/telegram) is fastest) and chat from your phone.
-
-  </Step>
-</Steps>
-
-Need the full install and dev setup? See [Getting Started](/start/getting-started).
-
-## Dashboard
-
-Open the browser Control UI after the Gateway starts.
-
-- Local default: [http://127.0.0.1:18789/](http://127.0.0.1:18789/)
-- Remote access: [Web surfaces](/web) and [Tailscale](/gateway/tailscale)
-
-<p align="center">
-  <img src="/whatsapp-openclaw.jpg" alt="OpenClaw" width="420" />
-</p>
-
-## Configuration (optional)
-
-Config lives at `~/.openclaw/openclaw.json`.
-
-- If you **do nothing**, OpenClaw uses the bundled Pi binary in RPC mode with per-sender sessions.
-- If you want to lock it down, start with `channels.whatsapp.allowFrom` and (for groups) mention rules.
-
-Example:
-
-```json5
-{
-  channels: {
-    whatsapp: {
-      allowFrom: ["+15555550123"],
-      groups: { "*": { requireMention: true } },
-    },
-  },
-  messages: { groupChat: { mentionPatterns: ["@openclaw"] } },
-}
-```
-
-## Start here
+## Start Here
 
 <Columns>
-  <Card title="Docs hubs" href="/start/hubs" icon="book-open">
-    All docs and guides, organized by use case.
+  <Card title="Getting Started" href="/getting-started" icon="book-open">
+    Current compatibility and native development paths.
   </Card>
-  <Card title="Configuration" href="/gateway/configuration" icon="settings">
-    Core Gateway settings, tokens, and provider config.
+  <Card title="Pivot Plan" href="/plans/apple-native-openjeeves-pivot" icon="map">
+    What to keep, what to remove, and how to migrate.
   </Card>
-  <Card title="Remote access" href="/gateway/remote" icon="globe">
-    SSH and tailnet access patterns.
+  <Card title="Configuration" href="/configuration" icon="settings">
+    Current inherited configuration while native config is designed.
   </Card>
-  <Card title="Channels" href="/channels/telegram" icon="message-square">
-    Channel-specific setup for Feishu, Microsoft Teams, WhatsApp, Telegram, Discord, and more.
-  </Card>
-  <Card title="Nodes" href="/nodes" icon="smartphone">
-    iOS and Android nodes with pairing, Canvas, camera, and device actions.
-  </Card>
-  <Card title="Help" href="/help" icon="life-buoy">
-    Common fixes and troubleshooting entry point.
-  </Card>
-</Columns>
-
-## Learn more
-
-<Columns>
-  <Card title="Full feature list" href="/concepts/features" icon="list">
-    Complete channel, routing, and media capabilities.
-  </Card>
-  <Card title="Multi-agent routing" href="/concepts/multi-agent" icon="route">
-    Workspace isolation and per-agent sessions.
-  </Card>
-  <Card title="Security" href="/gateway/security" icon="shield">
-    Tokens, allowlists, and safety controls.
-  </Card>
-  <Card title="Troubleshooting" href="/gateway/troubleshooting" icon="wrench">
-    Gateway diagnostics and common errors.
-  </Card>
-  <Card title="About and credits" href="/reference/credits" icon="info">
-    Project origins, contributors, and license.
+  <Card title="Security" href="/security" icon="shield">
+    Pairing, permissions, and safe defaults.
   </Card>
 </Columns>

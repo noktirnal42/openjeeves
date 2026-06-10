@@ -52,6 +52,9 @@ enum PermissionManager {
     }
 
     private static func ensureNotifications(interactive: Bool) async -> Bool {
+        guard UserNotificationCenterSupport.canUseCurrentCenter else {
+            return false
+        }
         let center = UNUserNotificationCenter.current()
         let settings = await center.notificationSettings()
 
@@ -190,6 +193,10 @@ enum PermissionManager {
         for cap in caps {
             switch cap {
             case .notifications:
+                guard UserNotificationCenterSupport.canUseCurrentCenter else {
+                    results[cap] = false
+                    continue
+                }
                 let center = UNUserNotificationCenter.current()
                 let settings = await center.notificationSettings()
                 results[cap] = settings.authorizationStatus == .authorized

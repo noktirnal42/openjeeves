@@ -1,117 +1,82 @@
 # Getting Started with OpenJeeves
 
-OpenJeeves is your personal AI assistant that combines the best of OpenClaw with Claude Code features. This guide will help you get up and running quickly.
+OpenJeeves is being rebuilt as a native macOS/iOS agent system. The current repository still includes an inherited gateway compatibility path, but the product direction is Swift-native: Foundation Models first, then Core AI and MLX where they fit.
 
-## Prerequisites
+## Choose A Path
 
-- **Node.js**: Version 22+ (24 recommended)
-- **Package Manager**: pnpm, npm, or bun
-- **Operating System**: macOS, Linux, or Windows (WSL2 recommended)
+Use the compatibility gateway when you need the existing web UI, protocol, or channel bridge today. Use the native development path when working on the new OpenJeeves runtime.
 
-## Quick Start
+## Compatibility Gateway
 
-### 1. Clone the Repository
+Prerequisites:
+
+- Node.js 22+; Node 24 recommended.
+- pnpm, npm, or bun.
+
+Run the inherited gateway:
 
 ```bash
 git clone https://github.com/noktirnal42/openjeeves.git
 cd openjeeves
-```
-
-### 2. Install Dependencies
-
-```bash
 pnpm install
-```
-
-### 3. Build the UI (Required First Time)
-
-```bash
 pnpm ui:build
-```
-
-### 4. Build the Backend
-
-```bash
 pnpm build
-```
-
-### 5. Run the Gateway
-
-```bash
 pnpm openclaw gateway run --bind loopback --port 18789
 ```
 
-### 6. Access the Control UI
+Open the local control UI:
 
-Open your browser and navigate to:
-
-```
+```text
 http://localhost:18789
 ```
 
-## Configuration
+Compatibility config still lives at the inherited OpenClaw path:
 
-### Basic Configuration
-
-Create a configuration file at `~/.openclaw/openclaw.json`:
-
-```json5
-{
-  agent: {
-    model: "openai/gpt-4.5",
-  },
-}
+```text
+~/.openclaw/openclaw.json
 ```
 
-### Adding Channels
+That path will change or be wrapped once OpenJeeves has a native configuration layer.
 
-```json5
-{
-  agent: {
-    model: "openai/gpt-4.5",
-  },
-  channels: {
-    discord: {
-      token: "your-discord-bot-token",
-    },
-    telegram: {
-      botToken: "your-telegram-bot-token",
-    },
-  },
-}
+## Native Apple Development
+
+The native app surfaces live here:
+
+- `apps/macos`
+- `apps/ios`
+- `apps/shared/OpenClawKit`
+- `Swabble`
+
+Current native run scripts still use inherited names:
+
+```bash
+pnpm mac:restart
+pnpm ios:build
+pnpm ios:run
 ```
 
-## Using the Agents
+The next implementation target is a Swift runtime skeleton that can be called from macOS and iOS without routing every turn through the TypeScript gateway.
 
-OpenJeeves comes with four specialized agents:
+## Runtime Direction
 
-| Agent      | Command          | Description                 |
-| ---------- | ---------------- | --------------------------- |
-| **Jeeves** | Default          | General-purpose assistant   |
-| **Jewel**  | `/agent verify`  | Verification and validation |
-| **Apex**   | `/agent explore` | Codebase exploration        |
-| **Cypher** | `/agent plan`    | Planning and organization   |
+OpenJeeves should grow these runtimes in order:
 
-Switch agents using the agent selector in the chat interface.
+1. `foundationModels`: Apple Foundation Models on supported devices.
+2. `foundationModelsCloud`: Apple cloud/PCC escalation when available and allowed.
+3. `coreAI`: compiled on-device model assets.
+4. `mlx`: Mac-first local model helpers for Apple Silicon.
+5. `compatibilityBridge`: inherited gateway route for transitional workflows.
 
-## Tools
+## Existing Useful Surfaces
 
-OpenJeeves includes Claude Code tools:
-
-- `todo_write` - Create and manage todo lists
-- `task_create` - Spawn background tasks
-- `task_list` - List running tasks
-- `task_stop` - Stop a running task
-- `read` - Read files
-- `write` - Write files
-- `edit` - Edit files
-- `glob` - Find files by pattern
-- `grep` - Search file contents
-- `exec` - Run shell commands
+- macOS: menu bar app, permissions, talk mode, gateway control, push-to-talk, canvas, and local automation.
+- iOS: pairing, device tools, camera, location, contacts, calendars, reminders, photos, watch, voice, and share extension.
+- Shared Swift: chat UI, protocol models, device command types, and support utilities.
+- Speech: local wake and speech work that should be reconciled with current upstream `apps/swabble`.
 
 ## Next Steps
 
-- Read the [Configuration Guide](configuration.md) for advanced settings
-- Check [Channels](channels.md) for messaging platform setup
-- Explore [Skills](skills.md) for automation
-- Review [Security](security.md) for production deployment
+- Read the [Apple-native pivot plan](plans/apple-native-openjeeves-pivot.md).
+- Read the [Vision](../VISION.md).
+- Use the compatibility gateway only when you need current inherited behavior.
+- Start new model/runtime work in Swift, not as another TypeScript provider bolted onto the gateway.

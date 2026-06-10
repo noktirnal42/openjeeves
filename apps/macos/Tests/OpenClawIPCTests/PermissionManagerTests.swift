@@ -13,7 +13,7 @@ struct PermissionManagerTests {
     }
 
     @Test func `status can query non interactive caps`() async {
-        let caps: [Capability] = [.microphone, .speechRecognition, .screenRecording]
+        let caps: [Capability] = [.microphone, .notifications, .speechRecognition, .screenRecording]
         let status = await PermissionManager.status(caps)
         #expect(status.keys.count == caps.count)
     }
@@ -34,5 +34,13 @@ struct PermissionManagerTests {
         let status = CLLocationManager().authorizationStatus
         let ensured = await PermissionManager.ensure([.location], interactive: false)
         #expect(ensured[.location] == (status == .authorizedAlways))
+    }
+
+    @Test func `notification center support identifies app bundle paths`() {
+        #expect(UserNotificationCenterSupport.isAppBundle(URL(fileURLWithPath: "/Applications/OpenJeeves.app")))
+        #expect(!UserNotificationCenterSupport.isAppBundle(
+            URL(fileURLWithPath: "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/libexec/swift/pm/")))
+        #expect(!UserNotificationCenterSupport.isAppBundle(
+            URL(fileURLWithPath: "/tmp/OpenJeeves/.build/arm64-apple-macosx/debug/")))
     }
 }
