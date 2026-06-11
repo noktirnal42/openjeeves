@@ -19,6 +19,8 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/steipete/ElevenLabsKit", exact: "0.1.0"),
         .package(url: "https://github.com/gonzalezreal/textual", exact: "0.3.1"),
+        .package(url: "https://github.com/ml-explore/mlx-swift-lm", exact: "3.31.3"),
+        .package(url: "https://github.com/huggingface/swift-transformers", from: "1.3.0"),
     ],
     targets: [
         .target(
@@ -36,7 +38,14 @@ let package = Package(
             ]),
         .target(
             name: "JeevesLocalModelRuntimes",
-            dependencies: ["JeevesAgentCore"],
+            dependencies: [
+                "JeevesAgentCore",
+                .product(name: "MLXLLM", package: "mlx-swift-lm"),
+                .product(name: "MLXVLM", package: "mlx-swift-lm"),
+                .product(name: "MLXLMCommon", package: "mlx-swift-lm"),
+                .product(name: "MLXHuggingFace", package: "mlx-swift-lm"),
+                .product(name: "Tokenizers", package: "swift-transformers"),
+            ],
             path: "Sources/JeevesLocalModelRuntimes",
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),

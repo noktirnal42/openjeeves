@@ -1,3 +1,4 @@
+import Foundation
 import JeevesAgentCore
 import OpenClawKit
 import Testing
@@ -111,6 +112,36 @@ struct OpenJeevesNativeChatTransportTests {
         let sessions = try await transport.listSessions(limit: nil)
 
         #expect(sessions.sessions.first?.model == "openjeeves/inMemory")
+    }
+
+    @Test
+    func imageAttachmentsPreferVisionRuntime() async throws {
+        let router = JeevesRuntimeRouter(candidates: [
+            JeevesRuntimeCandidate(runtime: TestRuntime(id: .mlx)),
+            JeevesRuntimeCandidate(runtime: TestRuntime(id: .mlxVLM, response: "vision")),
+        ])
+        let transport = OpenJeevesNativeChatTransport(runtime: router)
+
+        _ = try await transport.sendMessage(
+            sessionKey: "main",
+            message: "What is shown?",
+            thinking: "off",
+            idempotencyKey: "run-vision",
+            attachments: [
+                OpenClawChatAttachmentPayload(
+                    type: "file",
+                    mimeType: "image/png",
+                    fileName: "image.png",
+                    content: Data([1, 2, 3]).base64EncodedString()),
+            ])
+        let history = try await transport.requestHistory(sessionKey: "main")
+        let messages = history.messages?.compactMap {
+            try? ChatPayloadDecoding.decode($0, as: OpenClawChatMessage.self)
+        } ?? []
+
+        #expect(messages.first?.content.count == 2)
+        #expect(messages.first?.content.last?.mimeType == "image/png")
+        #expect(messages.last?.content.first?.text == "vision: What is shown?")
     }
 }
 

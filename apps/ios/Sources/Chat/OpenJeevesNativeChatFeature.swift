@@ -60,7 +60,9 @@ enum OpenJeevesNativeChatFeature {
         return [
             JeevesFoundationModelsRuntimeCandidate.make(instructions: self.foundationModelsInstructions),
             JeevesCoreAIRuntimeCandidate.make(configuration: .from(environment: environment)),
-            JeevesMLXRuntimeCandidate.make(configuration: .from(environment: environment)),
+            JeevesMLXRuntimeCandidate.make(configuration: .from(
+                environment: environment,
+                discoverInstalledModels: true)),
             JeevesRuntimeCandidate(runtime: JeevesInMemoryAgentRuntime(), displayName: "Native In-Memory"),
         ]
     }

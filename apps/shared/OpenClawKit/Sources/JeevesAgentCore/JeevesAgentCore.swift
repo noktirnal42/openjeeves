@@ -12,17 +12,46 @@ public struct JeevesAgentMessage: Codable, Sendable, Equatable, Identifiable {
     public var role: JeevesAgentRole
     public var content: String
     public var metadata: [String: String]
+    public var attachments: [JeevesAgentAttachment]
 
     public init(
         id: String = UUID().uuidString,
         role: JeevesAgentRole,
         content: String,
-        metadata: [String: String] = [:])
+        metadata: [String: String] = [:],
+        attachments: [JeevesAgentAttachment] = [])
     {
         self.id = id
         self.role = role
         self.content = content
         self.metadata = metadata
+        self.attachments = attachments
+    }
+}
+
+public struct JeevesAgentAttachment: Codable, Sendable, Equatable, Identifiable {
+    public var id: String
+    public var type: String
+    public var mimeType: String
+    public var fileName: String
+    public var data: Data
+
+    public init(
+        id: String = UUID().uuidString,
+        type: String,
+        mimeType: String,
+        fileName: String,
+        data: Data)
+    {
+        self.id = id
+        self.type = type
+        self.mimeType = mimeType
+        self.fileName = fileName
+        self.data = data
+    }
+
+    public var isImage: Bool {
+        self.mimeType.lowercased().hasPrefix("image/")
     }
 }
 
@@ -69,6 +98,7 @@ public enum JeevesRuntimeID: String, Codable, Sendable, Equatable, CaseIterable 
     case foundationModelsCloud
     case coreAI
     case mlx
+    case mlxVLM
     case compatibilityBridge
     case inMemory
 }

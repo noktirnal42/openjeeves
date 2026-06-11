@@ -61,7 +61,8 @@ public final class OpenJeevesNativeChatTransport: @unchecked Sendable, OpenClawC
     {
         let key = Self.normalizedSessionKey(sessionKey)
         let session = await self.state.session(for: key)
-        let preferredRuntime = await self.state.preferredRuntime(for: key) ?? self.runtime.id
+        let configuredRuntime = await self.state.preferredRuntime(for: key) ?? self.runtime.id
+        let preferredRuntime = attachments.contains(where: Self.isImageAttachment) ? .mlxVLM : configuredRuntime
         let trimmed = message.trimmingCharacters(in: .whitespacesAndNewlines)
         let inputText = trimmed.isEmpty && !attachments.isEmpty ? "See attached." : trimmed
         let input = JeevesAgentMessage(
@@ -70,7 +71,8 @@ public final class OpenJeevesNativeChatTransport: @unchecked Sendable, OpenClawC
             metadata: [
                 "attachments.count": String(attachments.count),
                 "source": "openclaw-chat-ui",
-            ])
+            ],
+            attachments: attachments.compactMap(Self.agentAttachment(from:)))
 
         do {
             _ = try await session.run(
@@ -168,6 +170,8 @@ public final class OpenJeevesNativeChatTransport: @unchecked Sendable, OpenClawC
             "Core AI"
         case .mlx:
             "MLX"
+        case .mlxVLM:
+            "MLX VLM"
         case .compatibilityBridge:
             "Compatibility Bridge"
         case .inMemory:
@@ -182,15 +186,37 @@ public final class OpenJeevesNativeChatTransport: @unchecked Sendable, OpenClawC
     }
 
     private static func chatPayload(from message: JeevesAgentMessage) -> AnyCodable {
-        AnyCodable([
-            "role": AnyCodable(message.role.rawValue),
-            "content": AnyCodable([
-                [
-                    "type": "text",
-                    "text": message.content,
-                ],
+        var content = [
+            AnyCodable([
+                "type": AnyCodable("text"),
+                "text": AnyCodable(message.content),
             ]),
+        ]
+        for attachment in message.attachments {
+            content.append(AnyCodable([
+                "type": AnyCodable(attachment.type),
+                "mimeType": AnyCodable(attachment.mimeType),
+                "fileName": AnyCodable(attachment.fileName),
+                "content": AnyCodable(attachment.data.base64EncodedString()),
+            ]))
+        }
+        return AnyCodable([
+            "role": AnyCodable(message.role.rawValue),
+            "content": AnyCodable(content),
         ])
+    }
+
+    private static func agentAttachment(from payload: OpenClawChatAttachmentPayload) -> JeevesAgentAttachment? {
+        guard let data = Data(base64Encoded: payload.content) else { return nil }
+        return JeevesAgentAttachment(
+            type: payload.type,
+            mimeType: payload.mimeType,
+            fileName: payload.fileName,
+            data: data)
+    }
+
+    private static func isImageAttachment(_ payload: OpenClawChatAttachmentPayload) -> Bool {
+        payload.mimeType.lowercased().hasPrefix("image/")
     }
 }
 

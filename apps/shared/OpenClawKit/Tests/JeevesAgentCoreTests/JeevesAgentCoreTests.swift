@@ -1,5 +1,6 @@
 import Testing
 @testable import JeevesAgentCore
+import Foundation
 
 struct JeevesAgentCoreTests {
     @Test
@@ -39,6 +40,22 @@ struct JeevesAgentCoreTests {
         #expect(hints.preferredRuntime == nil)
         #expect(hints.allowCloudEscalation == false)
         #expect(hints.userLocaleIdentifier == nil)
+    }
+
+    @Test
+    func messageCarriesNativeAttachments() {
+        let attachment = JeevesAgentAttachment(
+            type: "file",
+            mimeType: "image/png",
+            fileName: "screen.png",
+            data: Data([1, 2, 3]))
+        let message = JeevesAgentMessage(
+            role: .user,
+            content: "Describe this.",
+            attachments: [attachment])
+
+        #expect(message.attachments == [attachment])
+        #expect(message.attachments.first?.isImage == true)
     }
 
     @Test
