@@ -9,7 +9,7 @@ struct ChatSheet: View {
     private let agentName: String?
 
     init(gateway: GatewayNodeSession, sessionKey: String, agentName: String? = nil, userAccent: Color? = nil) {
-        let transport = IOSGatewayChatTransport(gateway: gateway)
+        let transport = OpenJeevesNativeChatFeature.makeTransport(gateway: gateway)
         self._viewModel = State(
             initialValue: OpenClawChatViewModel(
                 sessionKey: sessionKey,

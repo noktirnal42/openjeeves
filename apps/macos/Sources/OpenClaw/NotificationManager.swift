@@ -15,6 +15,10 @@ struct NotificationManager {
     }()
 
     func send(title: String, body: String, sound: String?, priority: NotificationPriority? = nil) async -> Bool {
+        guard UserNotificationCenterSupport.canUseCurrentCenter else {
+            self.logger.debug("notification skipped because the process is not running from an app bundle")
+            return false
+        }
         let center = UNUserNotificationCenter.current()
         let status = await center.notificationSettings()
         if status.authorizationStatus == .notDetermined {

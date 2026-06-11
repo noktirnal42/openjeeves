@@ -1,4 +1,4 @@
-# 🤵 OpenJeeves — Personal AI Assistant
+# OpenJeeves
 
 <p align="center">
   <picture>
@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <strong>Your Personal AI Butler, Powered by Claude Code & OpenClaw</strong>
+  <strong>A native Apple agent system for macOS and iOS.</strong>
 </p>
 
 <p align="center">
@@ -17,191 +17,72 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
 </p>
 
-**OpenJeeves** is a branded fork of [OpenClaw](https://github.com/openclaw/openclaw) enhanced with features from the open-source **Claude Code** leak. It combines the best of both worlds:
+OpenJeeves is being rebuilt as a privacy-first personal agent for Apple devices. The target product is a Swift-native macOS/iOS system that can use Apple's Foundation Models, Core AI, App Intents, and Apple Silicon local-model runtimes through MLX.
 
-- ✅ **OpenClaw 2026.4.6+ features**: Multi-channel inbox, Gateway control plane, skills system
-- ✅ **Claude Code integration**: Todo management, background agents, session memory, skills registry
-- ✅ **Custom branding**: Purple/green theme, custom avatars, Jeeves identity
-- ✅ **Model-agnostic**: Works with Ollama, LM Studio, OpenRouter (not locked to Anthropic)
+This repository still contains compatibility infrastructure inherited from OpenClaw. That code is useful for protocol, pairing, messaging, security, and app scaffolding, but it is no longer the product direction. OpenJeeves should define itself by the native Apple runtime, not by inherited gateway code or external coding CLI wrappers.
 
-## 👥 Meet the Agents
+## Current Status
 
-Our AI assistant comes with four specialized agents, each with a unique personality and role:
+OpenJeeves is in a transition state.
 
-| Agent      | Avatar                                           | Role               |
-| ---------- | ------------------------------------------------ | ------------------ |
-| **Jeeves** | ![Jeeves](/openjeeves/assets/avatars/jeeves.png) | General Assistant  |
-| **Jewel**  | ![Jewel](/openjeeves/assets/avatars/jewel.png)   | Verification Agent |
-| **Apex**   | ![Apex](/openjeeves/assets/avatars/apex.png)     | Explorer Agent     |
-| **Cypher** | ![Cypher](/openjeeves/assets/avatars/cypher.png) | Planner Agent      |
+- The existing macOS, iOS, watch, and shared Swift packages are the foundation for the native product.
+- The TypeScript gateway remains available as a compatibility bridge while the Swift agent runtime is built.
+- Public docs are being rewritten around the Apple-native direction.
+- The implementation plan lives in [docs/plans/apple-native-openjeeves-pivot.md](docs/plans/apple-native-openjeeves-pivot.md).
 
-Each agent can be selected via the agent selector in the chat interface to tailor the AI's behavior to your task.
+## Target Architecture
 
-## ✨ Features
+The native OpenJeeves line will center on Swift packages and Apple platform capabilities:
 
-### Core OpenClaw Features
+- `JeevesAgentCore`: sessions, turns, messages, tools, permissions, memory, and event logging.
+- `JeevesFoundationModelsRuntime`: Apple Foundation Models for local system intelligence, tool calling, guided generation, and optional Apple cloud/PCC escalation when available and allowed.
+- `JeevesCoreAIRuntime`: Core AI model loading, specialization, and on-device execution for supported Apple model assets.
+- `JeevesMLXRuntime`: Mac-first local model helpers for larger or specialist models that make sense on Apple Silicon.
+- `JeevesPlatformTools`: App Intents, Shortcuts-facing actions, macOS automation, and iOS device tools behind explicit permission policies.
 
-- **Multi-channel inbox**: WhatsApp, Telegram, Slack, Discord, Signal, iMessage, and more
-- **Gateway control plane**: Single WS control for sessions, channels, tools, and events
-- **Skills platform**: Bundled, managed, and workspace skills
-- **Voice wake & talk**: macOS/iOS voice activation, Android voice mode
+Runtime selection should prefer the most private viable local runtime first, then escalate only when the user has allowed it.
 
-### Claude Code Enhancements
+## What Exists Today
 
-- **Todo management**: Structured task tracking with `todo_write`, `todo_read` tools
-- **Background agents**: Spawn sub-agents with `task_create`, `task_stop`, etc.
-- **Session memory**: Automatic conversation context logging
-- **Skills registry**: Built-in skills for code review, debugging, testing, refactoring
-- **Tool registry**: Unified tool system combining Claude Code tools with OpenClaw tools
+Useful pieces already in the repository:
 
-### OpenJeeves Customizations
+- `apps/macos`: macOS menu bar app, local permissions, talk mode, gateway control, push-to-talk, canvas, and host automation surfaces.
+- `apps/ios`: iOS node app, pairing, camera, location, contacts, calendars, reminders, photos, watch, voice, and share extension surfaces.
+- `apps/shared/OpenClawKit`: shared Swift UI, protocol, device command, and support utilities that can become OpenJeeves shared infrastructure.
+- `Swabble`: Swift speech and wake-word utilities that should be reconciled with upstream's newer `apps/swabble` layout.
+- `src`, `extensions`, `ui`, and gateway docs: compatibility infrastructure that should be narrowed over time instead of treated as the long-term product center.
 
-- **Custom branding**: Purple (#8b5cf6) and green (#22c55e) theme
-- **Agent avatars**: Four custom avatars (Jeeves, Jewel, Apex, Cypher)
-- **FiraCode Nerd Font**: Preferred monospace font
-- **Custom favicon**: Hexagon logo with gradient
+## Development Priorities
 
-## 🚀 Quick Start
+1. Stop the clone story in public docs and product metadata.
+2. Add a native Swift agent runtime skeleton under the Apple app/shared package structure.
+3. Wire macOS and iOS chat surfaces to the native runtime behind a feature flag.
+4. Implement Foundation Models as the first real runtime.
+5. Add Core AI and MLX as optional runtimes with clear OS, Xcode, and device constraints.
+6. Harvest targeted upstream OpenClaw fixes for Apple app reliability, MLX speech, packaging, security, and pairing.
+7. Shrink the OpenClaw compatibility bridge as native OpenJeeves features replace it.
 
-### Prerequisites
+## Compatibility Gateway
 
-- **Node.js**: 22+ (24 recommended)
-- **Package Manager**: pnpm, npm, or bun
-
-### Installation
+For now, the inherited gateway can still be run for compatibility work:
 
 ```bash
-# Clone the repository
-git clone https://github.com/noktirnal42/openjeeves.git
-cd openjeeves
-
-# Install dependencies
 pnpm install
-
-# Build the UI (required first time)
 pnpm ui:build
-
-# Build the backend
 pnpm build
-
-# Run the gateway
 pnpm openclaw gateway run --bind loopback --port 18789
 ```
 
-### Alternative: Use Pre-built Release
+This command path is not the desired final user experience. It exists so the current app, protocol, and channel code can keep working while the native Swift runtime comes online.
 
-```bash
-# Install OpenClaw first, then replace with OpenJeeves
-npm install -g openclaw@latest
-
-# Clone OpenJeeves and use local source
-cd openjeeves
-pnpm openclaw gateway run --bind loopback --port 18789
-```
-
-## 🔧 Configuration
-
-OpenJeeves uses the same configuration structure as OpenClaw. Create `~/.openclaw/openclaw.json`:
-
-```json5
-{
-  agent: {
-    model: "openai/gpt-4.5", // or any supported model
-  },
-  channels: {
-    discord: {
-      token: "your-discord-bot-token",
-    },
-  },
-}
-```
-
-### Supported Models
-
-OpenJeeves works with multiple model providers:
-
-- **OpenAI**: GPT-4.5, o3, o4-mini
-- **Anthropic**: Claude (via built-in provider)
-- **Ollama**: Local models
-- **LM Studio**: Local models
-- **OpenRouter**: Any model from the catalog
-- And many more...
-
-## 📖 Documentation
-
-Full documentation is available at [docs.openjeeves.ai](https://docs.openjeeves.ai) (coming soon).
-
-### Key Docs
+## Documentation
 
 - [Getting Started](docs/getting-started.md)
+- [Apple-native pivot plan](docs/plans/apple-native-openjeeves-pivot.md)
+- [Vision](VISION.md)
 - [Configuration](docs/configuration.md)
-- [Channels](docs/channels.md)
-- [Tools](docs/tools.md)
-- [Skills](docs/skills.md)
 - [Security](docs/security.md)
 
-## 🔨 Development
+## License
 
-### Building from Source
-
-```bash
-# Full build (backend + UI)
-pnpm build
-
-# UI only
-pnpm ui:build
-
-# Run in development mode
-pnpm gateway:watch
-```
-
-### Running Tests
-
-```bash
-# Run all tests
-pnpm test
-
-# Run specific test file
-pnpm test src/agents/claude-code-integration/test.ts
-```
-
-## 🎨 Branding
-
-### Colors
-
-- **Primary**: Purple (#8b5cf6)
-- **Secondary**: Green (#22c55e)
-- **Background**: Dark (#0e1015)
-
-### Fonts
-
-- **Code**: FiraCode Nerd Font Mono
-- **UI**: Inter
-
-### Logo
-
-The OpenJeeves logo is a hexagon with a purple-to-green gradient and "$" prompt, representing the fusion of Claude Code (the "leaked" version) with OpenClaw.
-
-## 📝 License
-
-OpenJeeves is MIT licensed, same as OpenClaw.
-
-## 🙏 Acknowledgments
-
-- **OpenClaw Team**: For building an amazing personal AI assistant
-- **Claude Code**: For the leaked source code that inspired many features
-- **Contributors**: Thanks to all who have contributed to this project
-
-## 🔗 Links
-
-- [GitHub](https://github.com/noktirnal42/openjeeves)
-- [Documentation](https://docs.openjeeves.ai) (coming soon)
-- [OpenClaw](https://github.com/openclaw/openclaw)
-- [Discord](https://discord.gg/clawd)
-
----
-
-<p align="center">
-  <strong>OpenJeeves — Your Personal AI Butler</strong><br>
-  🤵 Built with ❤️ using Claude Code + OpenClaw
-</p>
+OpenJeeves is MIT licensed. See [LICENSE](LICENSE).

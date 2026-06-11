@@ -1,110 +1,75 @@
-## OpenClaw Vision
+# OpenJeeves Vision
 
-OpenClaw is the AI that actually does things.
-It runs on your devices, in your channels, with your rules.
+OpenJeeves is a native Apple agent system for people who want a capable personal assistant that feels local, private, and deeply integrated with macOS and iOS.
 
-This document explains the current state and direction of the project.
-We are still early, so iteration is fast.
-Project overview and developer docs: [`README.md`](README.md)
-Contribution guide: [`CONTRIBUTING.md`](CONTRIBUTING.md)
+The long-term product is not a generic gateway clone. It is a Swift-native agent runtime that can use Apple platform intelligence directly:
 
-OpenClaw started as a personal playground to learn AI and build something genuinely useful:
-an assistant that can run real tasks on a real computer.
-It evolved through several names and shells: Warelay -> Clawdbot -> Moltbot -> OpenClaw.
+- Foundation Models for system-provided language intelligence, structured output, and tool calling.
+- Core AI for compiled on-device model assets as Apple opens that stack.
+- MLX for Apple Silicon local models and specialist Mac-first helpers.
+- App Intents and Shortcuts for user-approved automation.
+- SwiftUI apps for macOS, iOS, watchOS, and shared Apple device surfaces.
 
-The goal: a personal assistant that is easy to use, supports a wide range of platforms, and respects privacy and security.
+## Product Principles
 
-The current focus is:
+OpenJeeves should feel like an Apple-native assistant, not a web service wrapped in a menu bar.
+
+- Local first: prefer on-device execution and local context whenever possible.
+- Permission honest: every powerful action should have a clear user-controlled approval path.
+- Native by default: Swift, SwiftUI, App Intents, Foundation Models, Core AI, and Apple platform APIs should own the main experience.
+- Compatibility is temporary: inherited gateway code can bridge existing features, but it should not define the final architecture.
+- Useful before broad: nail the macOS/iOS daily assistant loop before chasing every channel and provider.
+- Security is product quality: pairing, sandboxing, allowlists, logs, and approval trails are part of the UX.
+
+## Near-Term Focus
 
 Priority:
 
-- Security and safe defaults
-- Bug fixes and stability
-- Setup reliability and first-run UX
+- Replace public clone/Claude/OpenClaw positioning with the Apple-native direction.
+- Build a small native Swift agent runtime skeleton.
+- Connect one macOS/iOS chat path to the native runtime behind a feature flag.
+- Implement a minimal Foundation Models runtime with availability diagnostics.
+- Preserve existing app and protocol work that helps the native path.
 
 Next priorities:
 
-- Supporting all major model providers
-- Improving support for major messaging channels (and adding a few high-demand ones)
-- Performance and test infrastructure
-- Better computer-use and agent harness capabilities
-- Ergonomics across CLI and web frontend
-- Companion apps on macOS, iOS, Android, Windows, and Linux
+- Add a native tool registry around App Intents and existing device capabilities.
+- Move wake/speech work toward the newer `apps/swabble` layout from current upstream OpenClaw.
+- Evaluate upstream MLX speech helpers for targeted harvest.
+- Add Core AI experiments once local toolchain and OS availability support it.
+- Define when the compatibility gateway is required, optional, or retired.
 
-Contribution rules:
+## What We Will Not Optimize For
 
-- One PR = one issue/topic. Do not bundle multiple unrelated fixes/features.
-- PRs over ~5,000 changed lines are reviewed only in exceptional circumstances.
-- Do not open large batches of tiny PRs at once; each PR has review cost.
-- For very small related fixes, grouping into one focused PR is encouraged.
+- Being a branded OpenClaw fork.
+- Being an external coding CLI wrapper.
+- Matching OpenClaw's full provider and channel catalog.
+- Making TypeScript the owner of Apple-native model execution.
+- Shipping broad agent hierarchies before the core local assistant loop works.
+- Hiding risky automation behind convenience.
 
-## Security
+## Architecture Direction
 
-Security in OpenClaw is a deliberate tradeoff: strong defaults without killing capability.
-The goal is to stay powerful for real work while making risky paths explicit and operator-controlled.
+OpenJeeves should split model selection from runtime ownership:
 
-Canonical security policy and reporting:
+- `foundationModels`: default Apple Intelligence path on supported devices.
+- `foundationModelsCloud`: Apple cloud/PCC escalation when available and allowed.
+- `coreAI`: compiled on-device model assets.
+- `mlx`: Mac-first local model helpers.
+- `compatibilityBridge`: inherited gateway path for transitional workflows.
 
-- [`SECURITY.md`](SECURITY.md)
+The Swift runtime should own sessions, tool calls, permissions, memory, and event logs. The compatibility bridge can remain useful, but it should become one integration behind the native product rather than the product itself.
 
-We prioritize secure defaults, but also expose clear knobs for trusted high-power workflows.
+## Migration Guardrail
 
-## Plugins & Memory
+Do not rebase OpenJeeves wholesale onto current OpenClaw as the main strategy. The fork is too stale and the desired product direction is different.
 
-OpenClaw has an extensive plugin API.
-Core stays lean; optional capability should usually ship as plugins.
+Use OpenClaw upstream as a source of targeted fixes:
 
-Preferred plugin path is npm package distribution plus local extension loading for development.
-If you build a plugin, host and maintain it in your own repository.
-The bar for adding optional plugins to core is intentionally high.
-Plugin docs: [`docs/tools/plugin.md`](docs/tools/plugin.md)
-Community plugin listing + PR bar: https://docs.openclaw.ai/plugins/community
+- Apple app reliability.
+- iOS and macOS onboarding.
+- MLX speech and local audio experiments.
+- pairing, gateway exposure, and execution-approval security.
+- protocol lessons that help the temporary bridge.
 
-Memory is a special plugin slot where only one memory plugin can be active at a time.
-Today we ship multiple memory options; over time we plan to converge on one recommended default path.
-
-### Skills
-
-We still ship some bundled skills for baseline UX.
-New skills should be published to ClawHub first (`clawhub.ai`), not added to core by default.
-Core skill additions should be rare and require a strong product or security reason.
-
-### MCP Support
-
-OpenClaw supports MCP through `mcporter`: https://github.com/steipete/mcporter
-
-This keeps MCP integration flexible and decoupled from core runtime:
-
-- add or change MCP servers without restarting the gateway
-- keep core tool/context surface lean
-- reduce MCP churn impact on core stability and security
-
-For now, we prefer this bridge model over building first-class MCP runtime into core.
-If there is an MCP server or feature `mcporter` does not support yet, please open an issue there.
-
-### Setup
-
-OpenClaw is currently terminal-first by design.
-This keeps setup explicit: users see docs, auth, permissions, and security posture up front.
-
-Long term, we want easier onboarding flows as hardening matures.
-We do not want convenience wrappers that hide critical security decisions from users.
-
-### Why TypeScript?
-
-OpenClaw is primarily an orchestration system: prompts, tools, protocols, and integrations.
-TypeScript was chosen to keep OpenClaw hackable by default.
-It is widely known, fast to iterate in, and easy to read, modify, and extend.
-
-## What We Will Not Merge (For Now)
-
-- New core skills when they can live on ClawHub
-- Full-doc translation sets for all docs (deferred; we plan AI-generated translations later)
-- Commercial service integrations that do not clearly fit the model-provider category
-- Wrapper channels around already supported channels without a clear capability or security gap
-- First-class MCP runtime in core when `mcporter` already provides the integration path
-- Agent-hierarchy frameworks (manager-of-managers / nested planner trees) as a default architecture
-- Heavy orchestration layers that duplicate existing agent and tool infrastructure
-
-This list is a roadmap guardrail, not a law of physics.
-Strong user demand and strong technical rationale can change it.
+Then continue building the native OpenJeeves line in Swift.
